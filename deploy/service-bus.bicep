@@ -39,17 +39,6 @@ resource sbAuthorizationRules 'Microsoft.ServiceBus/namespaces/AuthorizationRule
   }
 }
 
-resource sbNetworkRuleSet 'Microsoft.ServiceBus/namespaces/networkRuleSets@2021-06-01-preview' = {
-  name: 'default'
-  parent: serviceBusNamespace
-  properties: {
-    defaultAction: 'Allow'
-    ipRules: []
-    publicNetworkAccess: 'Enabled'
-    virtualNetworkRules: []
-  }
-}
-
 resource sbQueues 'Microsoft.ServiceBus/namespaces/queues@2021-06-01-preview' = {
   name: 'demo-queue'
   parent: serviceBusNamespace
