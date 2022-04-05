@@ -36,19 +36,19 @@ az deployment group create --resource-group "<Your Resource Group Name>" --templ
 1. Go to Azure Portal, login, locate the resource group you created earlier, and click on the API Management instance you created earlier.
 
 1. In the APIs section click APIs, and under Define new API select HTTP.
-    ![Define new API](media/s1.PNG)
+    ![Define new API](media/s1.png)
 
 1. In the Create an HTTP API, provide a display name, API URL suffix, and click Create.
-    ![Create new API](media/s2.PNG)
+    ![Create new API](media/s2.png)
 
 1. Add an Operation, provide display name, set URL method to "POST" and the template path pointing to the queue or topic name {queue_or_topic}. The "{}" will capture this path and create a template parameter to use in our policy definitions.
     ![Create Operation](media/s3.PNG)
 
 1. Click Save. The Frontend definition should look as below with the "queue_or_topic" template parameter.
-    ![Frontend Design](media/s4.PNG)
+    ![Frontend Design](media/s4.png)
 
 1. Click on the "</>" icon to edit the policies.
-    ![Edit Policy](media/s5.PNG)
+    ![Edit Policy](media/s5.png)
 
 1. Configure the inbound policy using the XML snippet below. Make sure to replace the "\<Your Service Bus Namespace\>" with your Namespace.
     ```xml
@@ -77,7 +77,7 @@ az deployment group create --resource-group "<Your Resource Group Name>" --templ
     ```
 
 1. Use Postman or another tool to send a request as shown below to the "demo-queue" created during deployment. Make sure to send in the API key in the header "Ocp-Apim-Subscription-Key".
-    ![Test API](media/s6.PNG)
+    ![Test API](media/s6.png)
 
 1. Go to your Service Bus Namespace in Azure Portal, click on Queues, select "demo-queue", click Service Bus Explorer, click the "Peak" tab, and Peak. Select the message and the popup will show the message content.
-    ![Peak](media/s7.PNG)
+    ![Peak](media/s7.png)
