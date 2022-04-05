@@ -1,0 +1,63 @@
+<!--
+    IMPORTANT:
+    - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.
+    - To apply a policy to the incoming request (before it is forwarded to the backend service), place a corresponding policy element within the <inbound> section element.
+    - To apply a policy to the outgoing response (before it is sent back to the caller), place a corresponding policy element within the <outbound> section element.
+    - To add a policy, place the cursor at the desired insertion point and select a policy from the sidebar.
+    - To remove a policy, delete the corresponding policy statement from the policy document.
+    - Position the <base> element within a section element to inherit all policies from the corresponding section element in the enclosing scope.
+    - Remove the <base> element to prevent inheriting policies from the corresponding section element in the enclosing scope.
+    - Policies are applied in the order of their appearance, from the top down.
+    - Comments within policy elements are not supported and may disappear. Place your comments between policy elements or at a higher level scope.
+-->
+<policies>
+    <inbound>
+        <base />
+        <!-- Set variable for the queue or topic to send the message to. This comes from the request. -->
+        <set-variable name="queue_or_topic" value="@(context.Request.MatchedParameters["queue_or_topic"])" />
+
+        <!-- Use Managed Identity for authorization to send data to Service Bus and set the Authorization header. -->
+        <authentication-managed-identity resource="https://servicebus.azure.net" output-token-variable-name="msi-access-token" ignore-error="false" />
+        <set-header name="Authorization" exists-action="override">
+            <value>@((string)context.Variables["msi-access-token"])</value>
+        </set-header>
+
+        <!-- Set the HTTP method to POST to Service Bus REST API. The request body is expected to be in JSON. -->
+        <set-method>POST</set-method>
+        <set-body>@{
+                JObject json = context.Request.Body.As<JObject>(preserveContent: true);
+                return JsonConvert.SerializeObject(json);
+        }</set-body>
+
+        <!-- Set the backend URL for the Service Bus REST API using the queue_or_topic variable set earlier. -->
+        <set-backend-service base-url="https://<Your Service Bus Namespace>.servicebus.windows.net" />
+        <rewrite-uri template="@("/" + (string)context.Variables["queue_or_topic"] +"/messages" )" copy-unmatched-params="false" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+        <set-variable name="errorMessage" value="@{
+            return new JObject(
+                new JProperty("EventTime", DateTime.UtcNow.ToString()),
+                new JProperty("ErrorMessage", context.LastError.Message),
+                new JProperty("ErrorReason", context.LastError.Reason),
+                new JProperty("ErrorSource", context.LastError.Source),
+                new JProperty("ErrorScope", context.LastError.Scope),
+                new JProperty("ErrorSection", context.LastError.Section)
+ 
+            ).ToString();
+        }" />
+        <return-response>
+            <set-status code="500" reason="Error" />
+            <set-header name="Content-Type" exists-action="override">
+                <value>application/json</value>
+            </set-header>
+            <set-body>@((string)context.Variables["errorMessage"])</set-body>
+        </return-response>
+    </on-error>
+</policies>
