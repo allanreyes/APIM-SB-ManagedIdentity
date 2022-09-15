@@ -12,7 +12,7 @@ az group create -n "<Your Resource Group Name>" -l "<Your Resource Location>"
 ## Deploy API Management
 
 ```bash
-az deployment group create --resource-group "<Your Resource Group Name>" --template-file deploy/apim.bicep --parameters publisherEmail="<Your Email Address>" publisherName="<Your Name>" apimServiceName="<Unique APIM Service Name>"
+az deployment group create --resource-group "<Your Resource Group Name>" --template-file infra/modules/apim.bicep --parameters publisherEmail="<Your Email Address>" publisherName="<Your Name>" apimServiceName="<Unique APIM Service Name>"
 ```
 
 The APIM deployment can take time to complete.
@@ -20,7 +20,7 @@ The APIM deployment can take time to complete.
 ## Deploy Service Bus
 
 ```bash
-az deployment group create --resource-group "<Your Resource Group Name>" --template-file deploy/service-bus.bicep --parameters nameSpace="<Unique Service Bus Namespace>"
+az deployment group create --resource-group "<Your Resource Group Name>" --template-file infra/modules/service-bus.bicep --parameters nameSpace="<Unique Service Bus Namespace>"
 ```
 
 ## Assign Role to Service Bus for API Management Identity
@@ -28,7 +28,7 @@ az deployment group create --resource-group "<Your Resource Group Name>" --templ
 The deployment below will assign the Azure Service Bus Data Sender role to API Management Identity.
 
 ```bash
-az deployment group create --resource-group "<Your Resource Group Name>" --template-file deploy/roleAssign-apim-service-bus.bicep --parameters apimServiceName="<Your APIM Service Name>" sbNameSpace="<Your Service Bus Namespace>"
+az deployment group create --resource-group "<Your Resource Group Name>" --template-file infra/modules/roleAssign-apim-service-bus.bicep --parameters apimServiceName="<Your APIM Service Name>" sbNameSpace="<Your Service Bus Namespace>"
 ```
 
 ## Configure API Management API
