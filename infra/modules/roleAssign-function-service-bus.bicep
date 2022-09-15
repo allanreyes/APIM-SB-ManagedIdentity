@@ -4,7 +4,7 @@ param functionAppName string
 @description('The Service Bus Namespace')
 param sbNameSpace string
 
-resource functionAppInstance 'Microsoft.ApiManagement/service@2021-08-01' existing = {
+resource functionAppInstance 'Microsoft.Web/sites@2021-03-01' existing = {
   name: functionAppName
 }
 
