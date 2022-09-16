@@ -1,5 +1,5 @@
 @description('The name of the API Management service instance')
-param apimServiceName string
+param apimServiceName string = 'apim-${uniqueString(resourceGroup().id)}'
 
 @description('The email address of the owner of the service')
 @minLength(1)

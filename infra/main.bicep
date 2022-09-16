@@ -18,15 +18,16 @@ param publisherEmail string
 param publisherName string
 
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: '${name}-rg'
+  name: 'rg-${name}'
   location: location
 }
+
 
 module apim './modules/apim.bicep' = {
   name: '${rg.name}-apim'
   scope: rg
   params: {
-    apimServiceName: toLower(name)
+    apimServiceName: 'apim-${toLower(name)}'
     publisherEmail: publisherEmail
     publisherName: publisherName
     location: rg.location
@@ -37,7 +38,7 @@ module servicebus './modules/service-bus.bicep' = {
   name: '${rg.name}-servicebus'
   scope: rg
   params: {
-    nameSpace: toLower(name)
+    nameSpace: 'sb-${toLower(name)}'
     location: rg.location
   }
 }
@@ -46,7 +47,7 @@ module cosmosdb './modules/cosmosdb.bicep' = {
   name: '${rg.name}-cosmosdb'
   scope: rg
   params: {
-    accountName: toLower(name)
+    accountName: 'cosmos-${toLower(name)}'
     location: rg.location
   }
 }
@@ -55,7 +56,7 @@ module function './modules/function.bicep' = {
   name: '${rg.name}-function'
   scope: rg
   params: {
-    appName: toLower(name)
+    appName: 'func-${toLower(name)}'
     location: rg.location
     appInsightsLocation: rg.location
   }
@@ -75,7 +76,7 @@ module roleAssignmentAPIMSenderSB './modules/roleAssign-apim-service-bus.bicep' 
 }
 
 module roleAssignmentFcuntionReceiverSB './modules/roleAssign-function-service-bus.bicep' = {
-  name: '${rg.name}-roleAssignmentAPIMSB'
+  name: '${rg.name}-roleAssignmentFunctionSB'
   scope: rg
   params: {
     functionAppName: function.outputs.functionAppName
@@ -88,7 +89,7 @@ module roleAssignmentFcuntionReceiverSB './modules/roleAssign-function-service-b
 }
 
 module configurFunctionAppSettings './modules/configure-function-settings.bicep' = {
-  name: '${rg.name}-roleAssignmentAPIMSB'
+  name: '${rg.name}-configureFunction'
   scope: rg
   params: {
     functionAppName: function.outputs.functionAppName
