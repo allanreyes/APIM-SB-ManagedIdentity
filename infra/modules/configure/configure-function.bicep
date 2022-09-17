@@ -41,4 +41,7 @@ resource srcControls 'Microsoft.Web/sites/sourcecontrols@2021-01-01' = {
     branch: branch
     isManualIntegration: true
   }
+  dependsOn: [
+    configurFunctionAppSettings
+  ]
 }
