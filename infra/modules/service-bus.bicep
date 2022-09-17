@@ -1,5 +1,5 @@
 @description('The Service Bus Namespace')
-param nameSpace string
+param nameSpace string = 'sb-${uniqueString(resourceGroup().id)}'
 
 @description('Location for all resources.')
 param location string = resourceGroup().location
