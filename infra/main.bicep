@@ -104,7 +104,7 @@ module configurFunctionAppSettings './modules/configure/configure-function.bicep
 }
 
 module configurAPIM './modules/configure/configure-apim.bicep' = {
-  name: '${rg.name}-configureFunction'
+  name: '${rg.name}-configureAPIM'
   scope: rg
   params: {
     apimServiceName: apim.outputs.apimServiceName

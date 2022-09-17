@@ -12,7 +12,7 @@ The client can be simulated using curl, Postman, or any other tool that can send
 
 ```bash
 az login # Login via browser
-az deployment sub create --location "<Your Chosen Location>" --template-file infra/main.bicep --parameters name="<Name suffix for resources>" publisherEmail="<Published Email for APIM>" publisherName="<Publisher Name for APIM>" 
+az deployment sub create --name "<unique deployment name" --location "<Your Chosen Location>" --template-file infra/main.bicep --parameters name="<Name suffix for resources>" publisherEmail="<Published Email for APIM>" publisherName="<Publisher Name for APIM>" 
 ```
 
 NOTE: The APIM deployment can take up to one hour to complete.
