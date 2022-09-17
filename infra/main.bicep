@@ -102,3 +102,17 @@ module configurFunctionAppSettings './modules/configure/configure-function.bicep
     cosmosdb
   ]
 }
+
+module configurAPIM './modules/configure/configure-apim.bicep' = {
+  name: '${rg.name}-configureFunction'
+  scope: rg
+  params: {
+    apimServiceName: apim.outputs.apimServiceName
+    sbEndpoint: servicebus.outputs.sbEndpoint
+  }
+  dependsOn: [
+    apim
+  ]
+}
+
+output apimServideBusOperation string = '${apim.outputs.apimEndpoint}/sb-operations/'
