@@ -62,7 +62,7 @@ module function './modules/function.bicep' = {
   }
 }
 
-module roleAssignmentAPIMSenderSB './modules/roleAssign-apim-service-bus.bicep' = {
+module roleAssignmentAPIMSenderSB './modules/configure/roleAssign-apim-service-bus.bicep' = {
   name: '${rg.name}-roleAssignmentAPIMSB'
   scope: rg
   params: {
@@ -75,7 +75,7 @@ module roleAssignmentAPIMSenderSB './modules/roleAssign-apim-service-bus.bicep' 
   ]
 }
 
-module roleAssignmentFcuntionReceiverSB './modules/roleAssign-function-service-bus.bicep' = {
+module roleAssignmentFcuntionReceiverSB './modules/configure/roleAssign-function-service-bus.bicep' = {
   name: '${rg.name}-roleAssignmentFunctionSB'
   scope: rg
   params: {
@@ -88,7 +88,7 @@ module roleAssignmentFcuntionReceiverSB './modules/roleAssign-function-service-b
   ]
 }
 
-module configurFunctionAppSettings './modules/configure-function-settings.bicep' = {
+module configurFunctionAppSettings './modules/configure/configure-function.bicep' = {
   name: '${rg.name}-configureFunction'
   scope: rg
   params: {
