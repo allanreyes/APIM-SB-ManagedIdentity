@@ -56,21 +56,21 @@ The following deployments will run:
 
 ![deployment times](media/s9.png)
 
-NOTE: The APIM deployment can take over an hour to complete.
+>**NOTE**: The APIM deployment can take over an hour to complete.
 
 ## Validate Deployment
 
 1. Use Curl or another tool to send a request as shown below to the "demo-queue" created during deployment. Make sure to send in the API key in the header "Ocp-Apim-Subscription-Key".
 
     ```bash
-    curl -X POST https://<Your APIM Gateway URL>/sb-operations/demo-queue 
-    -H 'Ocp-Apim-Subscription-Key:<Your APIM Subscription Key>'   
-    -H 'Content-Type: application/json' 
-    -d '{ "date" : "2022-09-17", 
-            "id" : "1", 
-            "data" : "Sending data via APIM->Service Bus->Function->CosmosDB" 
-        }'
+    curl -X POST https://<Your APIM Gateway URL>/sb-operations/demo-queue -H 'Ocp-Apim-Subscription-Key:<Your APIM Subscription Key>' -H 'Content-Type: application/json' -d '{ "date" : "2022-09-17", "id" : "1", "data" : "Sending data via APIM->Service Bus->Function->CosmosDB" }'
     ```
+    If using PowerShell use Invoke-WebRequest:
+
+    ```
+    Invoke-WebRequest -Uri "https://<Your APIM Gateway URL>/sb-operations/demo-queue" -Headers @{'Ocp-Apim-Subscription-Key' = '<Your APIM Subscription Key>'; 'Content-Type' = 'application/json'} -Method 'POST' -Body '{ "date" : "2022-09-17", "id" : "1", "data" : "Sending data via APIM->Service Bus->Function->CosmosDB" }'
+    ```
+
 
 1. Go to your deployment of Cosmos DB in Azure Portal, click on Data Explorer, select "demo-database" and the "demo-container”, click Items. Select the first item and view the content. It will match the data submitted to the APIM gateway in step 1.
     
