@@ -1,14 +1,8 @@
-# Exposing Azure Service Bus using API Management
+# Integration using Azure Service Bus and API Management
 
-This tutorial will walk through setting up API Management policy for sending data to Azure Service Bus. The API Management will use Managed Identity to access the Service Bus REST APIs. A Function is triggered when a message is queued in Service Bus, and it will write message data to Cosmos DB. The Function App will use Managed Identity to get access to Service Bus. This is a typical integration scenario leveraging APIs
+This is a quick start template that walks through setting up API Management policy for sending data to Azure Service Bus. The API Management uses Managed Identity to access the Service Bus REST APIs. A Function is triggered when a message is queued in Service Bus, and it will write message data to Cosmos DB. The Function App uses Managed Identity to get access to Service Bus. This is a typical integration scenario leveraging APIs.
 
-In the below architecture, Azure Function App processes the messages by simply writing the data to the Cosmos DB. The function can be extended to a durable function that orchestrates normalization and correlation of data prior to persisting to the Cosmos DB. Other potential extensions of use cases for this architecture are:
-
-1. Integrate backend systems using message broker to decouple services for scalability and reliability. Allows work to be queued when backend systems are unavailable.
-1. Extended to other consumers of the messages. Services such as Durable functions/Logic Apps to orchestrate workflows, or Microservices running in Container Apps/AKS to process the workload.
-1. API Management provides the publishing capability for HTTP APIs, to promote reuse and discoverability. It can manage other cross-cutting concerns such as authentication, throughput limits, and response caching etc.
-1. Provide load leveling to handle bursts in workloads and broadcasting of messages to multiple consumers.
-
+## Architecture
 Below architecture is deployed in this demonstration.
 
 ![Integration Architecture](media/s8.png)
@@ -23,6 +17,24 @@ Azure Services used:
 1. Cosmos DB
 
 The client can be simulated using curl, or any other tool that can send HTTP request to APIM gateway.
+
+## Benefits of this Architecture
+
+Below are benefits and potential extension scenarios for this architecture.
+
+1. Integrate backend systems using message broker to decouple services for scalability and reliability. 
+1. Allows work to be queued when backend systems are unavailable.
+1. API Management provides the publishing capability for HTTP APIs, to promote reuse and discoverability. It can manage other cross-cutting concerns such as authentication, throughput limits, and response caching.
+1. Provide load leveling to handle bursts in workloads and broadcast messages to multiple consumers.
+
+In the above architecture, Azure Function App processes the messages by simply writing the data to the Cosmos DB. 
+Other potential extensions of this architecture are:
+
+1. The function can be converted to a durable function that orchestrates normalization and correlation of data prior to persisting to the Cosmos DB or persisting to other storage.
+1. Instead of a Function App, other consumers can process the messages in Service Bus. Services such as Logic Apps to orchestrate workflows, or Microservices running in Container Apps/AKS to process the workload.
+1. An Azure EventGrid could be integrated with Service Bus for cost optimization in cases where messages are received occasionally.
+1. The APIM can be configured to expose other synchronous REST APIs.
+1. The Service bus could be replaced by other queueing technology such as EventHub and EventGrid.
 
 ## Deploy solution to Azure
 
@@ -71,7 +83,6 @@ The following deployments will run:
     Invoke-WebRequest -Uri "https://<Your APIM Gateway URL>/sb-operations/demo-queue" -Headers @{'Ocp-Apim-Subscription-Key' = '<Your APIM Subscription Key>'; 'Content-Type' = 'application/json'} -Method 'POST' -Body '{ "date" : "2022-09-17", "id" : "1", "data" : "Sending data via APIM->Service Bus->Function->CosmosDB" }'
     ```
 
-
 1. Go to your deployment of Cosmos DB in Azure Portal, click on Data Explorer, select "demo-database" and the "demo-container”, click Items. Select the first item and view the content. It will match the data submitted to the APIM gateway in step 1.
     
     ![Data in Cosmos DB](media/s10.png)
@@ -79,3 +90,5 @@ The following deployments will run:
 ## Disclaimer
 
 The code and deployment biceps are for demonstration purposes only.
+
+
