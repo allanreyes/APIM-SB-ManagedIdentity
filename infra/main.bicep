@@ -17,11 +17,15 @@ param publisherName string
 @description('Primary location for all resources')
 param location string = deployment().location
 
+@minLength(1)
+@description('Git repository that contain the function app files')
+param functionAppRepo string
+
+
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: 'rg-${suffix}'
   location: location
 }
-
 
 module apim './modules/apim.bicep' = {
   name: '${rg.name}-apim'
@@ -80,6 +84,7 @@ module roleAssignmentFcuntionReceiverSB './modules/configure/roleAssign-function
   params: {
     functionAppName: function.outputs.functionAppName
     sbNameSpace: servicebus.outputs.sbNameSpace
+
   }
   dependsOn: [
     function
@@ -94,6 +99,7 @@ module configurFunctionAppSettings './modules/configure/configure-function.bicep
     functionAppName: function.outputs.functionAppName
     cosmosAccountName: cosmosdb.outputs.cosmosDBAccountName
     sbHostName: servicebus.outputs.sbHostName
+    repositoryUrl: functionAppRepo
   }
   dependsOn: [
     function
